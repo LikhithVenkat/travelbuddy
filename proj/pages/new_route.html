@@ -1,0 +1,51 @@
+<head>
+  <title>TravelBuddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../styles/style.css" />
+  <script src="../scripts/form.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+</head>
+
+<body>
+  <div class="header-container">
+    <div style="display: inline-block">
+      <a class="logo" href="/homepage">
+        <h1><em>Travel Buddy</em></h1>
+      </a>
+    </div>
+  </div>
+  <div class="menu" style="padding-bottom: 100px">
+    <table cellpadding="10px" cellspacing="10px">
+      <tr>
+        <th colspan="2">
+          <h1>Create new route</h1>
+          <br />
+        </th>
+      </tr>
+    </table>
+    <div class="forms" style="height: 20%">
+      <form
+        action="/new_route"
+        name="new_route_form"
+        id="new_route_form"
+        onsubmit="return validate()"
+        method="post"
+      >
+        
+      <input type="text" name="source" placeholder="Enter Source" />
+      <div id="sourceerror"><br /><br /></div>
+      <input
+        type="text"
+        name="destination"
+        placeholder="Enter Destination"
+      />
+      <div id="desterror"><br /><br /></div>
+      <input type="date" name="date" placeholder="Timings" />
+      <div id="dateerror"><br /><br /></div>
+      <input id="buttons" style="width: 45%" type="submit" />
+        <input id="buttons" style="width: 45%" type="reset" /><br>
+      </form>
+    </div>
+  </div>
+</body>

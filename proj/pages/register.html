@@ -1,0 +1,57 @@
+<head>
+  <title>TravelBuddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../styles/style.css" />
+  <script src="../scripts/form.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <script>
+    angular.module('myApp',['ngAnimate']).controller('myController',function($scope){
+      $scope.isChecked=false;
+    });
+  </script>
+</head>
+
+<body>
+  <div class="header-container">
+    <div style="display: inline-block">
+      <a class="logo" href="/homepage">
+        <h1><em>Travel Buddy</em></h1>
+      </a>
+    </div>
+  </div>
+  <div class="menu" style="padding-bottom: 50px">
+    <table cellpadding="10px" cellspacing="10px">
+      <tr>
+        <th colspan="2">
+          <h1>Register</h1>
+          <br />
+        </th>
+      </tr>
+    </table>
+    <div class="forms" style="height: auto" ng-app="myApp" ng-controller="myController">
+      <form
+        action="/register"
+        name="register_form"
+        id="register_form"
+        onsubmit=" return register_validate()"
+        method="post"
+      >
+        <input type="text" name="Email" placeholder="Enter Email ID" /><ion-icon name="mail"></ion-icon>
+        <div id="emailerror"><br /><br /></div>
+        <input type="text" name="Name" placeholder="Enter Name" /><ion-icon name="person"></ion-icon>
+        <div id="nameerror"><br><br></div>
+        <input type="password" name="Password" placeholder="Enter Password" /><ion-icon name="lock"></ion-icon>
+        <div id="passworderror"><br /><br /></div>
+        <input type="password" name="Confirm_Password" placeholder="Confirm Password" /><ion-icon name="lock"></ion-icon>
+        <div id="confpassworderror"><br /><br /></div>
+        <label style="font-size: 12px;"><input type="checkbox" ng-model="isChecked">I accept the terms and conditions</label>
+        <div id="btn-container"></div><input ng-hide="!isChecked" id="buttons" style="width: 45%" type="submit" />
+        <input id="buttons" style="width: 45%" type="reset" /><br></div>
+        <p>Already have an account? <a href="/login">Login</a></p>
+      </form>
+    </div>
+  </div>
+</body>

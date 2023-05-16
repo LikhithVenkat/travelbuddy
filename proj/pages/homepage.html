@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TravelBuddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Lobster);
+      h1 {
+        font-family: Lobster;
+        color: #537fe7;
+      }
+    </style>
+    <link rel="stylesheet" href="../styles/style.css" />
+    <script src="../scripts/form.js"></script>
+    <script src="../scripts/routing.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="../scripts/log_toggle.js"></script>
+  </head>
+
+  <body ng-app="myApp1" ng-controller="myCtrl1">
+    <div ng-view></div>
+    <div class="homepage-container">
+      <div class="head_and_login" style="display: flex">
+        <div class="login_icon_home" style="flex: 2">
+          <a href="/tools"
+            ><img src="../imgs/help.png" class="button-img"
+          /></a>
+        </div>
+        <div class="heading" style="flex: 20">
+          <h1 style="padding-left: 10%"><em>Travel Buddy</em></h1>
+        </div>
+        <div class="login_icon_home" style="flex: 2">
+          <a href="/friends"
+            ><img src="../imgs/friends.png" class="button-img"
+          /></a>
+        </div>
+        <div class="login_icon_home" style="flex: 2">
+          <a ng-show="isLoggedIn" ng-click="logout()" href="/logout"><img src="../imgs/login_icon.png" class="button-img" /></a>
+          <a ng-hide="isLoggedIn" href="/login"><img src="../imgs/login_icon.png" class="button-img" /></a>
+        </div>
+      </div>
+      <div class="content" style="margin-bottom: 5%">
+        <div class="forms">
+          <form
+            action="/query"
+            name="home_form"
+            id="home_form"
+            onsubmit="return validate()"
+            method="post"
+          >
+            <input type="text" name="source" placeholder="Enter Source" />
+            <div id="sourceerror"><br /><br /></div>
+            <input
+              type="text"
+              name="destination"
+              placeholder="Enter Destination"
+            />
+            <div id="desterror"><br /><br /></div>
+            <input type="date" name="date" placeholder="Timings" />
+            <div id="dateerror"><br /><br /></div>
+            <input id="buttons" style="width: 45%" type="submit" />
+            <input id="buttons" style="width: 45%" type="reset" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

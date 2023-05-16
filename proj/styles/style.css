@@ -1,0 +1,190 @@
+@import url(https://fonts.googleapis.com/css?family=Lobster);
+@import url(https://fonts.googleapis.com/css?family=Poppins);
+a:link {
+  color: #537fe7;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #537fe7;
+  text-decoration: none;
+}
+
+body {
+  background: rgb(22, 11, 221);
+  background: linear-gradient(90deg, #537fe7, #3c84ab);
+  margin: 0px;
+}
+
+.buttons{
+  background-color: #537fe7;
+  width: auto;
+  color: white;
+}
+
+#buttons {
+  background-color: #537fe7;
+  width: auto;
+  color: white;
+}
+
+#buttons.hidden {
+  opacity: 0;
+  transform: scale(0);
+}
+
+#buttons.ng-hide-add, #buttons.ng-hide-remove {
+  animation: my_fade_animation 0.5s linear;
+}
+
+@keyframes my_fade_animation {
+  from { opacity:1; }
+  to { opacity:0; }
+} 
+
+.button-img {
+  width: 50px;
+  height: 50px;
+  padding-top: 100px;
+}
+
+.confirm {
+  margin: auto;
+}
+
+.conf_table {
+  margin: auto;
+  padding-top: 10%;
+  color: white;
+  font-family: Lobster;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+}
+
+.forms {
+  font-family: Poppins;
+  border: 3px solid #537fe7;
+  border-radius: 10px 60px 10px 60px;
+  width: 20%;
+  height: 5%;
+  padding: 5%;
+  padding-left: auto;
+  padding-right: auto;
+  margin: auto;
+  margin-bottom: 5%;
+  background: rgba(83, 127, 231, 0.5);
+}
+
+.header-container {
+  font-family: Poppins;
+  position: relative;
+  background-color: white;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header-container img {
+  height: 7%;
+}
+
+.heading {
+  margin-top: 50px;
+  padding: 50px;
+}
+
+.heading h1 {
+  font-size: 40px;
+}
+
+.homepage-container {
+  margin: auto;
+  margin-top: 50px;
+  height: auto;
+  width: 90%;
+  text-align: center;
+  border: none;
+  border-radius: 5% 10%;
+  background-image: url("../imgs/background.png");
+}
+
+img {
+  height: 300px;
+  padding-right: 25%;
+}
+
+input {
+  font-family: Poppins;
+  font-size: 20px;
+}
+
+.login_icon_home {
+  position: static;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.logo {
+  font-family: Lobster;
+  font-size: 20px;
+}
+
+.menu {
+  width: auto;
+  text-align: center;
+  font-family: Poppins;
+  margin: auto;
+  margin-top: 30px;
+  height: auto;
+  width: 90%;
+  text-align: center;
+  border: none;
+  border-radius: 5% 10%;
+  background: white;
+  background-image: url("../imgs/background.png");
+}
+
+.menu_div {
+  border: 3px solid #537fe7;
+  border-radius: 10px;
+  width: 20%;
+  height: 5%;
+  padding: 5%;
+  margin: auto;
+  margin-bottom: 5%;
+  background: rgba(83, 127, 231, 0.5);
+}
+
+.travel_img {
+  padding: 80px;
+}
+
+.nl-ul{
+  list-style-type:none;
+  padding:0;
+  margin:0;
+}
+
+.nl-ul li{
+    padding:15px ;
+    border-bottom:1px solid #ddd;
+    background-color: #5c8de3;
+    margin-left:auto;
+    margin-right: auto;
+    width: 30%;
+
+  }
+.nl-ul li:last-child{
+    border-bottom:none
+  }
+.nl-id {
+  float: right;
+  right:0;
+}
+
+.toolbox{
+  padding-left: auto;
+  padding-right: auto;
+}

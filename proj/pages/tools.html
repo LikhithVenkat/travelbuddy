@@ -1,0 +1,70 @@
+</body>
+</html>
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <title>TravelBuddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <meta charset="UTF-8" />
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Lobster);
+      h1 {
+        font-family: Lobster;
+        color: #537fe7;
+      }
+    </style>
+    <link rel="stylesheet" href="../styles/style.css" />
+  </head>
+
+  <body>
+    <div class="homepage-container">
+      <div class="head_and_login" style="display: flex">
+        <div class="heading" style="flex: 20">
+          <h1><em>Travel Buddy</em></h1>
+        </div>
+        
+      </div>
+      <div class= "toolbox" style="margin-bottom: 5%" ng-controller="videoCtrl" style="align-content: center;">
+        <video width="640" height="360" ng-src="{{videoSrc}}" controls></video>
+            <br><br>
+            <div class="content" style="padding-left: 37%;">
+            <button ng-click="skip(-20)" class="buttons">Rewind 20s</button>
+            <button ng-click="skip(20)" class="buttons">Fast Forward 20s</button>
+            <button ng-click="pauseVid()" class="buttons">Pause</button>
+            <button ng-click="playVid()" class="buttons">Play</button>
+            <button ng-click="restart()" class="buttons">Restart</button></div>
+            <script>
+                var app = angular.module("myApp", []);
+                app.controller("videoCtrl", function($scope) {
+                    $scope.videoSrc = "../imgs/ssn.mp4"; 
+                    var video = document.querySelector('video');
+                    $scope.skip = function(seconds) {
+                        video.currentTime += seconds;
+                    };
+                    $scope.pauseVid = function() {
+                        video.pause();
+                    };
+                    $scope.playVid = function() {
+                        video.play();
+                    };
+                    $scope.restart = function() {
+                        video.currentTime = 0;
+                        video.play();
+                    };
+                });
+            </script>   
+      </div>
+      <a class="logo" href="/contactus">
+        <h1><em>Contact US</em></h1>
+      </a>
+      <a class="logo" href="/texteditor">
+        <h1><em>Text Editor</em></h1>
+      </a>
+      
+
+
+
+    </div>
+  </body>
+</html>

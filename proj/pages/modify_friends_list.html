@@ -1,0 +1,40 @@
+<head>
+  <title>TravelBuddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link rel="stylesheet" href="../styles/button.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script>
+    
+  </script>
+</head>
+
+<body ng-app="friends_list" ng-controller="myCtrl">
+  <div class="header-container" style="display: flex">
+    <div style="flex: 20">
+      <a class="logo" href="/homepage">
+        <h1><em>Travel Buddy</em></h1>
+      </a>
+    </div>
+    <div class="login_icon_home" style="flex: 2">
+      <a href="/friends"
+        ><img
+          src="../imgs/friends.png"
+          style="width: 50px; height: 50px; padding-top: 20px"
+      /></a>
+    </div>
+  </div>
+  <div class="menu" style="height: 75%">
+    <h1>Your Friends</h1>
+    <input type="text" id="name-input" ng-model="addMe" placeholder="Enter friend name" />
+    <button id="add-button" ng-click="addItem()">Add</button>
+    <p>{{errortext}}</p>
+    <ul class="nl-ul">
+      <li ng-repeat="x in names| filter: addMe">
+          {{x}}<span ng-click="removeItem($index)" class="nl-id">&#10060;</span>
+      </li>
+    </ul>
+    <script src="../scripts/modify.js"></script>
+  </div>
+</body>

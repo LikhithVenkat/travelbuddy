@@ -1,0 +1,47 @@
+<head>
+  <title>TravelBuddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../styles/style.css" />
+  <script src="../scripts/form.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+</head>
+
+<body>
+  <div class="header-container">
+    <div style="display: inline-block">
+      <a class="logo" href="/homepage">
+        <h1><em>Travel Buddy</em></h1>
+      </a>
+    </div>
+  </div>
+  <div class="menu" style="padding-bottom: 100px">
+    <table cellpadding="10px" cellspacing="10px">
+      <tr>
+        <th colspan="2">
+          <h1>Login</h1>
+          <br />
+        </th>
+      </tr>
+    </table>
+    <div class="forms" style="height: 20%">
+      <form
+        action="/login"
+        name="login_form"
+        id="login_form"
+        onsubmit="return login_validate()"
+        method="post"
+      >
+        
+        <input type="text" name="Email" placeholder="Enter Email ID" /><ion-icon name="mail" ></ion-icon>
+        <div id="emailerror"><br /><br /></div>
+        
+        <input type="password" name="Password" placeholder="Enter Password" /><ion-icon name="lock"></ion-icon>
+        <div id="passworderror"><br /><br /></div>
+        <input id="buttons" style="width: 45%" type="submit" />
+        <input id="buttons" style="width: 45%" type="reset" /><br>
+        <p>new to TravelBuddy? <a href="/register">Register</a></p>
+      </form>
+    </div>
+  </div>
+</body>

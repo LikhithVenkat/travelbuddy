@@ -1,0 +1,100 @@
+<head>
+    <title>TravelBuddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/toggle.css">
+    <script src="../scripts/form.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script>
+        var myApp = angular.module('myApp', []);
+        myApp.run(function($rootScope, $http, $window) {
+            $http.get('/checksession').then(function(response) {
+                if (!response.data) {
+                    $window.location.href = '/login';
+                }
+            });
+        });
+        myApp.controller("MyController", function ($scope, $http) {
+            $scope.view = 'grid';
+            $scope.src = '';
+
+            $http.get('/getroutes')
+                .then(function(response) {
+                $scope.items = response.data;
+                console.log("Fetched records:", $scope.items);
+                })
+                .catch(function(error) {
+                console.log('Error:', error);
+                });
+
+            $scope.toggleView = function() {
+                $scope.view = $scope.view === 'list' ? 'grid' : 'list';
+            };
+
+            $scope.submit_confirm = function(id) {
+                $scope.src = src;
+                $scope.dest = dest;
+                $scope.date = date;
+
+                $http.post('/confirm', {
+                        'rideId':id
+                    })
+                    .then(function(response) {
+                        console.log("Entered into the database successfully");
+                    });
+            };
+        });
+
+    </script>
+</head>
+
+<body ng-app="myApp">
+    <div class="header-container" style="display: flex;">
+        <div style="flex:20">
+            <a class="logo" href="/homepage">
+                <h1><em>Travel Buddy</em></h1>
+            </a>
+        </div>
+        <div class="login_icon_home"style="flex:2; ">
+            <a href="/friends"><img src="../imgs/friends.png" style="width:50px; height:50px; padding-top: 20px;"></a>
+        </div>
+    </div>
+        <div class="menu">
+            <table cellpadding="10px" cellspacing="10px">
+        
+                <tr>
+                    <th colspan="2">
+                        <h1>Available Rides</h1><br></th>
+                    <th ><h2><a href="/new_route">Create new ride</a></h2></th>
+                </tr>
+            </table>
+            <!--  &#10145  -->
+            <div ng-controller="MyController">
+                <button ng-click="toggleView()" class="buttons">{{ view === 'list' ? 'Grid View' : 'List View' }}</button>
+        
+                <div ng-if="view === 'list'" style="padding-left: 15%;">
+                    <ul>
+                    <li ng-repeat="item in items">
+                        <div style="width:80%; border: 3px solid black; padding: 20px; margin-bottom: 10px;">
+                            {{item.source+'   &#10145   '+item.destination}}<br>
+                            {{item.date}}<button class="buttons" ng-click="submit_confirm(item.source,item.destination,item.date)">confirm ride</button>
+                        </div>
+                    </li>
+                    </ul>
+                </div>
+        
+                <div ng-if="view === 'grid'" style="overflow: auto; padding-left:80px;">
+                    <div ng-repeat="item in items" style="width: 25%; float:left; padding:20px; border: 2px solid black; margin: 20px;">
+                        {{item.source+'   &#10145   '+item.destination}}<br>
+                        {{item.date}}<br><br> 
+                        <button class="buttons" ng-click="submit_confirm(item._id)">confirm ride</button>
+                    </div>
+                </div>
+                {{src+dest+date}}
+                {{items}}
+            </div>
+                  
+        </div>
+        </body> 
+        </html>

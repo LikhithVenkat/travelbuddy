@@ -1,0 +1,59 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #5c8de3;
+    color: #fff;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  .ride {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+  
+  .ride-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .ride-details div {
+    margin-right: 10px;
+  }
+  
+  .arrow {
+    font-size: 24px;
+  }
+  
+  button {
+    margin-left: 10px;
+  }
+  
+  .grid {
+    width: 100%;
+  }
+  
+  .list {
+    width: 100%;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
