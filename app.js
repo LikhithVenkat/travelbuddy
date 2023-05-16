@@ -261,5 +261,40 @@ app.post("/new_route", (req, res) => {
     });
   });
   
+  app.post('/save_friends', (req, res) => {
+    const sessionEmail = req.session.Email;
+    const friendsEmails = req.body.friendsEmails;
+    
+    // Update the 'friends' collection in the database
+    db.collection('friends').updateOne(
+      { email: sessionEmail }, // Find the document with the matching email
+      { $set: { friendsEmails: friendsEmails } }, // Update the 'friendsEmails' field
+      { upsert: true }, // Create the document if it doesn't exist
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        console.log('Friends list saved successfully');
+        res.send('Friends list saved successfully');
+      }
+    );
+  });
+  
+  // Update the '/friends' route to fetch the friends list from the database
+  app.get('/friends', (req, res) => {
+    const sessionEmail = req.session.Email;
+  
+    // Retrieve the friends list for the current session's email
+    db.collection('friends').findOne(
+      { email: sessionEmail },
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        const friendsEmails = result ? result.friendsEmails : [];
+        res.send(friendsEmails);
+      }
+    );
+  });
   
   
