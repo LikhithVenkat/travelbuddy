@@ -1,17 +1,25 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const router = express.Router();
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 const bodyParser=require('body-parser')
 const { MongoClient } = require('mongodb');
 const mongoose=require('mongoose')
-mongoose.connect('mongodb://localhost:27017/travel_buddy', { useNewUrlParser: true });
-var db=mongoose.connection
 
-// serve static files from the 'proj' directory
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/travel_buddy', { useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.log('Error connecting to MongoDB:', err);
+  });
+
+  const db=mongoose.connection;
+// Serve static files from the 'proj' directory
 app.use(express.static(path.join(__dirname, 'proj')));
-
 
 // serve the homepage.html file
 app.get('/', function(req, res) {
@@ -216,10 +224,7 @@ app.post("/new_route", (req, res) => {
     });
   });
 
-  // Define a route to serve the index.html file
-  app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-  });
+  app.use(router);
 
   app.post('/submitgrievance', (req, res) => {
     // Get the form data
@@ -230,7 +235,6 @@ app.post("/new_route", (req, res) => {
     // Insert the ride into the "confirmed_rides" collection
     const collection = db.collection('grievances');
     collection.insertOne({ email: email, grievances: grev, date: date}, (err, result) => {
-      assert.equal(null, err);
       console.log('Ride added to database successfully');
       res.redirect('/contactus');
     });
@@ -244,22 +248,40 @@ app.post("/new_route", (req, res) => {
       res.redirect('/contactus');
     });
   })
+  const { ObjectId } = require('mongodb');
+  const assert = require('assert');
+  app.post('/confirm_menu_ride', (req, res) => {
+    const collection = db.collection('riders');
+    const rideId = new ObjectId(req.body.rideId); // Convert ID to ObjectId
 
-  app.get('/getroutes', (req, res) => {
-    const collection = db.collection('routes');
-    collection.find({}).toArray((err, records) => {
-      if (err) {
-        console.error('Failed to fetch records:', err);
-        res.status(500).send('Failed to fetch records from the database');
-        return;
-      }
-  
-      console.log('Fetched records:', records);
-  
-      // Send the records as the response
-      res.json(records);
+    collection.insertOne({ 'rideId': rideId, email: req.session.Email }, (err, result) => {
+        assert.equal(null, err);
+        console.log('Ride added to database successfully');
+        res.redirect('/confirm');
     });
+});
+  
+
+  const routeSchema = new mongoose.Schema({
+    source: String,
+    destination: String,
+    date: String
   });
+  
+  const Route = mongoose.model('Route', routeSchema, 'routes');
+  router.get('/getroutes', function(req, res) {
+    console.log('GET request for all info');
+    Route.find({})
+      .exec()
+      .then((routes) => {
+        res.json(routes);
+      })
+      .catch((err) => {
+        console.log('Error retrieving data:', err);
+        res.status(500).send('Error retrieving data');
+      });
+  });
+  
   
   app.post('/save_friends', (req, res) => {
     const sessionEmail = req.session.Email;
@@ -295,6 +317,6 @@ app.post("/new_route", (req, res) => {
         res.send(friendsEmails);
       }
     );
-  });
-  
+  }); 
+    
   

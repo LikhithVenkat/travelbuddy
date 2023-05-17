@@ -5,8 +5,13 @@
   <link rel="stylesheet" href="../styles/style.css" />
   <script src="../scripts/form.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-  <script src="../scripts/contact.js"></script>
   <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <script>
+    app=angular.module('myApp',[]);
+    app.controller('contactCtrl',function($scope){
+      //
+    });
+  </script>
 </head>
 
 <body ng-app="myApp" ng-controller="contactCtrl">
@@ -27,14 +32,13 @@
       </tr>
     </table>
     <div class="forms" style="height: 20%">
-      <h1>Contact Me</h1>
       <form name="contactForm" action="/submitgrievance" method="post">
           <label>Email:</label>
-          <input type="email" name="email" ng-model="email" required><br><br>
+          <input type="email" name="email" ng-model="email" required><br>
           <label>Grievance:</label>
           <textarea name="grievance" ng-model="grievance" required></textarea><br><br>
-          <button class=".buttons" type="submit" ng-disabled="contactForm.$invalid">Submit</button>
-          <button class=".buttons" type="reset">Reset</button>
+          <button class="buttons" type="submit" ng-disabled="contactForm.email.$invalid || contactForm.grievance.$invalid">Submit</button>
+          <button class="buttons" type="reset">Reset</button>
       </form>
       <br><br>
       

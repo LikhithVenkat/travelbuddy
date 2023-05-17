@@ -33,16 +33,23 @@
             };
 
             $scope.submit_confirm = function(id) {
-                $scope.src = src;
-                $scope.dest = dest;
-                $scope.date = date;
 
-                $http.post('/confirm', {
-                        'rideId':id
+                $scope.submit_confirm = function(id) {
+                    $scope.submit_confirm = function(id) {
+                    
+                    $http.post('/confirm_menu_ride', {
+                        'rideId': id
                     })
                     .then(function(response) {
                         console.log("Entered into the database successfully");
+                    })
+                    .catch(function(error) {
+                        console.log('Error:', error);
                     });
+                    };
+
+                };
+
             };
         });
 
@@ -78,7 +85,7 @@
                     <li ng-repeat="item in items">
                         <div style="width:80%; border: 3px solid black; padding: 20px; margin-bottom: 10px;">
                             {{item.source+'   &#10145   '+item.destination}}<br>
-                            {{item.date}}<button class="buttons" ng-click="submit_confirm(item.source,item.destination,item.date)">confirm ride</button>
+                            {{item.date}}<button class="buttons" ng-click="submit_confirm(item._id)">confirm ride</button>
                         </div>
                     </li>
                     </ul>
