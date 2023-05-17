@@ -1,3 +1,4 @@
+<html>
 <head>
     <title>TravelBuddy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,51 +10,45 @@
     <script>
         var myApp = angular.module('myApp', []);
         myApp.run(function($rootScope, $http, $window) {
-            $http.get('/checksession').then(function(response) {
-                if (!response.data) {
-                    $window.location.href = '/login';
-                }
+          $http.get('/checksession').then(function(response) {
+            if (!response.data) {
+              $window.location.href = '/login';
+            }
+          });
+        });
+      
+        myApp.controller("MyController", function ($scope, $http, $window) {
+          $scope.view = 'grid';
+          $scope.src = '';
+      
+          $http.get('/getroutes')
+            .then(function(response) {
+              $scope.items = response.data;
+              console.log("Fetched records:", $scope.items);
+            })
+            .catch(function(error) {
+              console.log('Error:', error);
             });
-        });
-        myApp.controller("MyController", function ($scope, $http) {
-            $scope.view = 'grid';
-            $scope.src = '';
-
-            $http.get('/getroutes')
-                .then(function(response) {
-                $scope.items = response.data;
-                console.log("Fetched records:", $scope.items);
-                })
-                .catch(function(error) {
+      
+          $scope.toggleView = function() {
+            $scope.view = $scope.view === 'list' ? 'grid' : 'list';
+          };
+      
+          $scope.submit_confirm = function(id) {
+            $http.post('/confirm_menu_ride', {
+                'rideId': id
+              })
+              .then(function(response) {
+                console.log("Entered into the database successfully");
+                $window.location.href = '/confirmation'; // Redirect to the confirmation page
+              })
+              .catch(function(error) {
                 console.log('Error:', error);
-                });
-
-            $scope.toggleView = function() {
-                $scope.view = $scope.view === 'list' ? 'grid' : 'list';
-            };
-
-            $scope.submit_confirm = function(id) {
-
-                $scope.submit_confirm = function(id) {
-                    $scope.submit_confirm = function(id) {
-                    
-                    $http.post('/confirm_menu_ride', {
-                        'rideId': id
-                    })
-                    .then(function(response) {
-                        console.log("Entered into the database successfully");
-                    })
-                    .catch(function(error) {
-                        console.log('Error:', error);
-                    });
-                    };
-
-                };
-
-            };
+              });
+          };
         });
-
-    </script>
+      </script>
+      
 </head>
 
 <body ng-app="myApp">
@@ -98,8 +93,6 @@
                         <button class="buttons" ng-click="submit_confirm(item._id)">confirm ride</button>
                     </div>
                 </div>
-                {{src+dest+date}}
-                {{items}}
             </div>
                   
         </div>

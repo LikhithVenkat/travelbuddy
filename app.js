@@ -44,6 +44,10 @@ app.get('/confirm', function(req, res) {
   res.sendFile(path.join(__dirname, 'proj', 'pages', 'confirm.html'));
 });
 
+app.get('/confirmation', function(req, res) {
+  res.sendFile(path.join(__dirname, 'proj', 'pages', 'confirm.html'));
+});
+
 app.get('/menu', function(req, res) {
   res.sendFile(path.join(__dirname, 'proj', 'pages', 'menu.html'));
 });
@@ -97,6 +101,8 @@ app.post('/login', (req, res) => {
   session = req.session;
   session.Email = req.body.Email;
   session.Password = req.body.Password;
+  session.source='';
+  session.destination='';
   console.log(req.session);
   var data={
     "email":session.Email,
@@ -147,22 +153,23 @@ app.post("/register",(req,res)=>{
 const request = require('request');
 
 app.post('/query', (req, res) => {
-  const formData = {
-    src: req.body.source,
-    dest: req.body.destination,
-    date: req.body.date
-  };
-
-  request.post({ url: 'http://localhost:3000/menu', formData }, (err, httpResponse, body) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error submitting form data');
+  session = req.session; // Retrieve session data
+  session.source = req.body.source;
+  session.destination = req.body.destination;
+  var data={
+    "source":req.body.source,
+    'destination':req.body.destination,
+    "date":req.body.date
+  }
+  db.collection('query').insertOne(data,(err,collection)=>{
+    if(err){
+      throw err;
     }
-
-    console.log('Form data submitted successfully');
+    console.log("record inserted successfully");
+    console.log(session);
     res.redirect('/menu');
+  })
   });
-});
 
 app.post('/menu', (req, res) => {
   const src = req.body.source;
@@ -240,16 +247,10 @@ app.post("/new_route", (req, res) => {
     });
   });
  
-  app.post('/confirm',(req,res)=>{
-    const collection=db.collection('riders');
-    collection.insertOne({'rideId':req.id ,email: req.session.Email}, (err, result) => {
-      assert.equal(null, err);
-      console.log('Ride added to database successfully');
-      res.redirect('/contactus');
-    });
-  })
+
   const { ObjectId } = require('mongodb');
   const assert = require('assert');
+
   app.post('/confirm_menu_ride', (req, res) => {
     const collection = db.collection('riders');
     const rideId = new ObjectId(req.body.rideId); // Convert ID to ObjectId
@@ -257,30 +258,35 @@ app.post("/new_route", (req, res) => {
     collection.insertOne({ 'rideId': rideId, email: req.session.Email }, (err, result) => {
         assert.equal(null, err);
         console.log('Ride added to database successfully');
-        res.redirect('/confirm');
+        res.redirect('/confirmation');
     });
 });
   
 
-  const routeSchema = new mongoose.Schema({
-    source: String,
-    destination: String,
-    date: String
-  });
+const routeSchema = new mongoose.Schema({
+  source: String,
+  destination: String,
+  date: String
+});
+
+const Route = mongoose.model('Route', routeSchema, 'routes');
+router.get('/getroutes', function(req, res) {
+  console.log('GET request for all info');
+  const session = req.session;
+  const source = session.source;
+  const destination = session.destination;
   
-  const Route = mongoose.model('Route', routeSchema, 'routes');
-  router.get('/getroutes', function(req, res) {
-    console.log('GET request for all info');
-    Route.find({})
-      .exec()
-      .then((routes) => {
-        res.json(routes);
-      })
-      .catch((err) => {
-        console.log('Error retrieving data:', err);
-        res.status(500).send('Error retrieving data');
-      });
-  });
+  Route.find({ source: source, destination: destination })
+    .exec()
+    .then((routes) => {
+      res.json(routes);
+    })
+    .catch((err) => {
+      console.log('Error retrieving data:', err);
+      res.status(500).send('Error retrieving data');
+    });
+});
+
   
   
   app.post('/save_friends', (req, res) => {
