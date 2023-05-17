@@ -14,7 +14,7 @@
                 }
             });
         });
-        myApp.controller("myCtrl", function ($scope, $http) {
+        myApp.controller("myCtrl", function ($scope, $http,$window) {
             $scope.isLoggedIn=false;
             $http.get('/checksession')
             .then(function(response) {
@@ -32,23 +32,28 @@
                 });
             }
             $scope.view = 'grid';
-            $scope.items = [
-                { name:"sarath",source:"hyderabad", destination:"chennai",date:"12-02-2022"},
-                { name:"karthik",source:"chennai", destination:"delhi",date:"18-03-2022"},
-                { name:"krithika",source:"delhi", destination:"hyderabad",date:"18-2-2022"},
-                { name:"thandav",source:"bangalore", destination:"chennai",date:"8-23-2022"},
-                { name:"dhanam",source:"hyderabad", destination:"bangalore",date:"18-23-2022"},
-                { name:"hima",source:"mumbai", destination:"chennai",date:"18-23-2022"},
-                { name:"ruthvika",source:"hyderabad", destination:"mumbai",date:"18-23-2022"}];
-
+            $http.get('/getFriendRideDetails')
+          .then(function(response) {
+            $scope.items = response.data;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
             $scope.toggleView = function() {
                 $scope.view = $scope.view === 'list' ? 'grid' : 'list';
             };
 
-            $scope.submit_confirm=function(src,dest,date){
-                $scope.src=src;
-                $scope.dest=dest;
-                $scope.date=date;
+            $scope.submit_confirm=function(id){
+                $http.post('/confirm_menu_ride', {
+                'rideId': id
+              })
+              .then(function(response) {
+                console.log("Entered into the database successfully");
+                $window.location.href = '/confirmation'; // Redirect to the confirmation page
+              })
+              .catch(function(error) {
+                console.log('Error:', error);
+              });
             };
         });
     </script>
@@ -87,9 +92,9 @@
                 <ul>
                 <li ng-repeat="item in items">
                     <div style="width:80%; border: 3px solid black; padding: 20px; margin-bottom: 10px;">
-                        {{item.name+'       '}}
+                        {{item.email+'       '}}
                         {{item.source+'   &#10145   '+item.destination}}<br>
-                        {{item.date}}<button class="buttons" ng-click="submit_confirm(item.source,item.destination,item.date)">confirm ride</button>
+                        {{item.date}}<button class="buttons" ng-click="submit_confirm(item._id)">confirm ride</button>
                     </div>
                 </li>
                 </ul>
@@ -97,10 +102,10 @@
     
             <div ng-if="view === 'grid'" style="overflow: auto; padding-left:80px;">
                 <div ng-repeat="item in items" style="width: 25%; float:left; padding:20px; border: 2px solid black; margin: 20px;">
-                    {{item.name}}<br>
+                    {{item.email}}<br>
                     {{item.source+'   &#10145   '+item.destination}}<br>
                     {{item.date}}<br><br> 
-                    <button class="buttons" ng-click="submit_confirm(item.source,item.destination,item.date)">confirm ride</button>
+                    <button class="buttons" ng-click="submit_confirm(item._id)">confirm ride</button>
                 </div>
             </div>
             {{src+dest+date}}

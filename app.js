@@ -7,7 +7,7 @@ const sessions = require('express-session');
 const bodyParser=require('body-parser')
 const { MongoClient } = require('mongodb');
 const mongoose=require('mongoose')
-
+app.use(bodyParser.json());
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/travel_buddy', { useNewUrlParser: true })
   .then(() => {
@@ -325,4 +325,75 @@ router.get('/getroutes', function(req, res) {
     );
   }); 
     
-  
+  // MongoDB Connection URL
+const mongoURI = 'mongodb://localhost:27017/travel_buddy';
+
+// Create a Mongoose connection
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+// Create Mongoose models for the collections
+const Friend = mongoose.model('Friend', new mongoose.Schema({
+  email: String,
+  friendsEmails: [String]
+}));
+
+const Rider = mongoose.model('Rider', new mongoose.Schema({
+  source: String,
+  destination: String,
+  date: String,
+  email: String,
+  rideId: mongoose.Types.ObjectId // Added rideId property
+}));
+
+const RouteModel = mongoose.model('RouteModel', new mongoose.Schema({
+  _id: mongoose.Types.ObjectId,
+  source: String,
+  destination: String,
+  date: String
+}),'routes');
+
+
+app.get('/getFriendRideDetails', async (req, res) => {
+  const userEmail = req.session.Email;
+
+  try {
+    // Find the user's friends based on the provided email
+    const friendData = await Friend.findOne({ email: userEmail });
+
+    if (!friendData || !friendData.friendsEmails) {
+      console.log('No friend data found for the provided email');
+      return res.status(404).send('No friend data found');
+    }
+
+    const friendsEmails = friendData.friendsEmails;
+    // Find the friend's ride details in the riders collection
+    const ridersData = await Rider.find({ email: { $in: friendsEmails } });
+
+    if (!ridersData || ridersData.length === 0) {
+      console.log('No ride data found for the provided friends');
+      return res.status(404).send('No ride data found');
+    }
+
+    const rideIds = ridersData.map(rider => rider.rideId);
+    // Find the ride details in the routes collection based on the retrieved rideIds
+    const routesData = await RouteModel.find({ _id: { $in: rideIds } });
+    // Prepare the response with required ride details
+    const rideDetails = routesData.map(route => {
+      const rider = ridersData.find(rider => rider.rideId && rider.rideId.equals(route._id));
+      return {
+        source: route.source,
+        destination: route.destination,
+        _id: route._id,
+        date: route.date,
+        email: rider ? rider.email : null // Include the email of the friend's ride or null if rider is not found
+      };
+    });
+
+    res.status(200).json(rideDetails);
+  } catch (err) {
+    console.error('Error occurred:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
