@@ -1,0 +1,55 @@
+<head>
+  <!-- Head content -->
+  <title>TravelBuddy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+ <link rel="stylesheet" href="../styles/style.css">
+  <link rel="stylesheet" href="../styles/toggle.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <script>
+    app = angular.module('myApp', []);
+    app.run(function($rootScope, $http, $window) {
+          $http.get('/checksession').then(function(response) {
+            if (!response.data) {
+              $window.location.href = '/login';
+            }
+          });
+        });
+    app.controller('contactCtrl', function ($scope, $http) {
+      $scope.rideDetails = []; // Initialize an array to store ride details
+
+      $http.get('/rideDetails') // Make a GET request to retrieve ride details
+        .then(function (response) {
+          $scope.rideDetails = response.data; // Assign the retrieved ride details to the scope variable
+        })
+        .catch(function (error) {
+          console.error('Error occurred:', error);
+        });
+    });
+  </script>
+</head>
+
+<body ng-app="myApp" ng-controller="contactCtrl">
+  <!-- Body content -->
+
+  <div class="forms" style="height: 20%; width: 40%; margin-top: 10%; background-color: white;">
+    <center>
+      <h1>Ride Details</h1>
+    </center>
+    <table>
+      <tr>
+        <th>Ride ID</th>
+        <th>Source</th>
+        <th>Destination</th>
+        <th>Date</th>
+      </tr>
+      <tr ng-repeat="ride in rideDetails">
+        <td>{{ ride._id }}</td>
+        <td>{{ ride.source }}</td>
+        <td>{{ ride.destination }}</td>
+        <td>{{ ride.date }}</td>
+      </tr>
+    </table>
+  </div>
+</body>

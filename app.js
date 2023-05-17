@@ -74,6 +74,9 @@ app.get('/contactus', function(req, res) {
 app.get('/texteditor',function(req,res){
   res.sendFile(path.join(__dirname, 'proj', 'pages', 'texteditor.html'));
 });
+app.get('/trips',function(req,res){
+  res.sendFile(path.join(__dirname, 'proj', 'pages', 'trips.html'));
+});
 // start the server
 app.listen(3000, function() {
   console.log('Server started on port 3000');
@@ -96,27 +99,50 @@ app.use(cookieParser());
 
 // a variable to save a session
 var session;
+const Registration = mongoose.model('Registration', new mongoose.Schema({
+  email: String,
+  password: String
+}));
+app.post('/login', async (req, res) => {
+  const email = req.body.Email;
+  const password = req.body.Password;
 
-app.post('/login', (req, res) => {
-  session = req.session;
-  session.Email = req.body.Email;
-  session.Password = req.body.Password;
-  session.source='';
-  session.destination='';
-  console.log(req.session);
-  var data={
-    "email":session.Email,
-    'date':new Date(),
-  }
-  db.collection('logins').insertOne(data,(err,collection)=>{
-    if(err){
-      throw err;
+  try {
+    // Check if the email and password match with the registrations collection
+    const registration = await Registration.findOne({ email, password });
+
+    if (!registration) {
+      console.log('Invalid email or password');
+      return res.status(401).send('Invalid email or password');
     }
-    console.log("record inserted successfully");
-  })
-  res.redirect('/homepage')
-  
+
+    session = req.session;
+    session.Email = email;
+    session.Password = password;
+    session.source = '';
+    session.destination = '';
+
+    console.log(req.session);
+
+    var data = {
+      email: session.Email,
+      date: new Date(),
+    };
+
+    db.collection('logins').insertOne(data, (err, collection) => {
+      if (err) {
+        throw err;
+      }
+      console.log('Record inserted successfully');
+    });
+
+    res.redirect('/homepage');
+  } catch (err) {
+    console.error('Error occurred:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
 
 app.get('/logout',(req,res) => {
   req.session.destroy();
@@ -390,6 +416,23 @@ app.get('/getFriendRideDetails', async (req, res) => {
         email: rider ? rider.email : null // Include the email of the friend's ride or null if rider is not found
       };
     });
+
+    res.status(200).json(rideDetails);
+  } catch (err) {
+    console.error('Error occurred:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/rideDetails', async (req, res) => {
+  const userEmail = req.session.Email;
+
+  try {
+    // Find the ride IDs associated with the session email in the Riders collection
+    const rideIds = await Rider.find({ email: userEmail }).distinct('rideId');
+
+    // Find the ride details in the Routes collection based on the retrieved ride IDs
+    const rideDetails = await Route.find({ _id: { $in: rideIds } });
 
     res.status(200).json(rideDetails);
   } catch (err) {
